@@ -1,0 +1,16 @@
+
+{# Basic scenario demo template # }
+
+Scenario: scenario_name
+
+	{% for step in givens %}
+	Given {{ step }}
+	{% endfor %}
+	{% for step in whens %}
+	When {{ step }}
+	{% endfor %}
+	{% for step in thens %}
+	Then {{ step }}
+	{% endfor %}
+	
+	

@@ -1,0 +1,6 @@
+/lib
+/libs
+/bin
+/testresources
+.*
+!.gitignore

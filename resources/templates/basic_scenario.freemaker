@@ -1,0 +1,16 @@
+
+{# Basic scenario demo template #}
+
+Scenario: scenario_name
+
+	<#list givens as step>
+	Given ${ step }
+	</#list>
+	<#list whens as step>
+	When {{ step }}
+	</#list>
+	<#list thens as step>
+	Then {{ step }}
+	</#list>
+	
+	
