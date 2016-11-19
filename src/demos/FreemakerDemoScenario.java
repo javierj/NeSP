@@ -4,8 +4,8 @@ import java.io.*;
 import java.util.*;
 
 import freemarker.template.*;
-import nesp.metamodel.gherkin.Given;
-import nesp.metamodel.gherkin.Scenario;
+import iwt2.metamodel.gherkin.Given;
+import iwt2.metamodel.gherkin.Scenario;
 
 public class FreemakerDemoScenario {
 

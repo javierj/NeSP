@@ -1,4 +1,4 @@
-package nesp.metamodel.gherkin;
+package iwt2.metamodel.gherkin;
 
 /**
  * @author Javier
