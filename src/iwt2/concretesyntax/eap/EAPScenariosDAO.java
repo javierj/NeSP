@@ -1,74 +1,46 @@
-package queries;
-
-import static org.junit.Assert.*;
+package iwt2.concretesyntax.eap;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.junit.Test;
-
+import iwt2.metamodel.gherkin.Scenario;
 import mdetest.concretesyntax.eap.EAPConnection;
 import mdetest.concretesyntax.eap.EAPException;
-import mdetest.metamodels.base.Constraint;
+import mdetest.concretesyntax.eap.EAPPackageDAO;
+import mdetest.concretesyntax.eap.EAPParentDAO;
+import mdetest.metamodels.functionalrequirement.FunctionalRequirement;
 
-/**
- * Tsting soem wuries for extracing information from EAP file.
- * @author Javier
- *
- */
-public class TestSQLQueries {
+public class EAPScenariosDAO extends EAPParentDAO {
 
-	EAPConnection c;
-	
-	public TestSQLQueries() {
-		c = EAPConnection.CreateConnection("./test/resources/ForTesting 01.EAP");
+	public EAPScenariosDAO(EAPConnection c) {
+		super(c);
 	}
 	
-	@Test
-	public void obtainAllSenarios() {
-		int size = 0;
+	
+	public List<Scenario> getScenariosFor(FunctionalRequirement fr) {
+		List<Scenario> scenarios = new ArrayList<>();
+		Scenario scen;
 		
-		String sqlText = "SELECT t_object.[Object_ID], t_object.[Name], t_object.[Note] "
-				+ "FROM t_object "
-				+ "WHERE t_object.[Stereotype]='scenario'" 
-				+ ";";
-
-		try {
-			ResultSet rs = c.executeQuery(sqlText);
-			
-			while (rs.next()) {
-				size++;
-			}
-			rs.close();
-
-		} catch (SQLException ex) {
-
-			System.out.println("Consulta SQL:\n" + sqlText);
-			throw new EAPException(
-					"Error recuperando información de las precondiciones");
+		if (fr.getInternalId() == null) {
+			System.err.println("EAPScenariosDAO::getScenariosFor -- No internal id setted.");
 		}
-
-		assertEquals(2, size);
-	}
-
-	
-	@Test
-	public void obtainSenariosAssociatedToAnUseCase() {
-		String frId = "11";
-		int size = 0;
 		
 		String sqlText = "SELECT t_object.[Object_ID], t_object.[Name], t_object.[Note] "
 				+ "FROM t_object, t_connector "
-				+ "WHERE t_connector.[Start_Object_ID]=" + frId
+				+ "WHERE t_connector.[Start_Object_ID]=" + fr.getInternalId()
 				+ " AND t_connector.[End_Object_ID]=t_object.[Object_ID]"
 				+ " AND t_object.[Stereotype]='scenario'"
 				+ ";";
 
 		try {
 			ResultSet rs = c.executeQuery(sqlText);
-			
 			while (rs.next()) {
-				size++;
+				scen = new Scenario();
+				scen.setDescription(rs.getString(3));
+				scenarios.add(scen);
+				
 			}
 			rs.close();
 
@@ -82,7 +54,7 @@ public class TestSQLQueries {
 
 		sqlText = "SELECT t_object.[Object_ID], t_object.[Name], t_object.[Note] "
 				+ "FROM t_object, t_connector "
-				+ "WHERE t_connector.[End_Object_ID]=" + frId
+				+ "WHERE t_connector.[End_Object_ID]=" + fr.getInternalId()
 				+ " AND t_connector.[Start_Object_ID]=t_object.[Object_ID]"
 				+ " AND t_object.[Stereotype]='scenario'"
 				+ ";";
@@ -91,7 +63,10 @@ public class TestSQLQueries {
 			ResultSet rs = c.executeQuery(sqlText);
 			
 			while (rs.next()) {
-				size++;
+				scen = new Scenario();
+				scen.setDescription(rs.getString(3));
+				scenarios.add(scen);
+				
 			}
 			rs.close();
 
@@ -102,7 +77,7 @@ public class TestSQLQueries {
 					"Error recuperando información de las precondiciones");
 		}
 		
-		assertEquals(2, size);
+		return scenarios;
 	}
 
 }

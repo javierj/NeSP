@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import iwt2.metamodel.gherkin.Feature;
+import iwt2.concretesyntax.eap.EAPScenariosDAO;
 import mdetest.concretesyntax.eap.EAPConnectionFacade;
 import mdetest.concretesyntax.eap.EAPFunctionalRequirementDAO;
 import mdetest.concretesyntax.eap.EAPPackageDAO;
@@ -15,7 +16,8 @@ public class SaveToText {
 	
 	public void saveToText(String eapFile, String packageName) {
 		EAPConnectionFacade.Connect(eapFile);
-		EAPFunctionalRequirementDAO frDAO =EAPConnectionFacade.getEAPFunctionalRequirementDAO();
+		EAPFunctionalRequirementDAO frDAO = EAPConnectionFacade.getEAPFunctionalRequirementDAO();
+		EAPScenariosDAO scenariosDAO = new EAPScenariosDAO(EAPConnectionFacade.Connection());
 		
 		
 		String pbId = this.idFor(packageName);
@@ -32,9 +34,11 @@ public class SaveToText {
 			features.add(feature);
 			
 			System.out.println(fr.getName() + ": " + fr.getInternalId());
-			
+			feature.setScenarios(scenariosDAO.getScenariosFor(fr));
+
 		}
-		
+
+		// Volcarlos a una plantilla.
 		
 	}
 	
