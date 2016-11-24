@@ -2,6 +2,8 @@ package iwt2.metamodel.gherkin;
 
 import java.util.*;
 
+import mdetest.metamodels.functionalrequirement.FunctionalRequirement;
+
 /**
  * @author Javier
  * @version 1.0
@@ -12,6 +14,8 @@ public class Feature {
 	private String description;
 	private String i_want;
 	private String in_order_to;
+	/** Trace relatio */
+	private FunctionalRequirement fr;
 	/**
 	 * context
 	 */
@@ -64,4 +68,14 @@ public class Feature {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public FunctionalRequirement getFunctionalRequirement() {
+		return fr;
+	}
+
+	public void setFunctionalRequirement(FunctionalRequirement fr) {
+		this.fr = fr;
+	}
+	
+	
 }//end Feature
