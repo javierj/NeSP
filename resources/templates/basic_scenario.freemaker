@@ -3,7 +3,8 @@
 
 Scenario: scenario_name
 
-	<#list givens as step>
+	<#assign gs = givens>
+	<#list gs as step>
 	Given ${ step }
 	</#list>
 	<#list whens as step>

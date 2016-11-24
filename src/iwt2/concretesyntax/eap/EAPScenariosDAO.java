@@ -21,7 +21,6 @@ public class EAPScenariosDAO extends EAPParentDAO {
 	
 	public List<Scenario> getScenariosFor(FunctionalRequirement fr) {
 		List<Scenario> scenarios = new ArrayList<>();
-		Scenario scen;
 		
 		if (fr.getInternalId() == null) {
 			System.err.println("EAPScenariosDAO::getScenariosFor -- No internal id setted.");
@@ -37,9 +36,7 @@ public class EAPScenariosDAO extends EAPParentDAO {
 		try {
 			ResultSet rs = c.executeQuery(sqlText);
 			while (rs.next()) {
-				scen = new Scenario();
-				scen.setDescription(rs.getString(3));
-				scenarios.add(scen);
+				scenarios.add(extractScenario(rs));	
 				
 			}
 			rs.close();
@@ -63,10 +60,7 @@ public class EAPScenariosDAO extends EAPParentDAO {
 			ResultSet rs = c.executeQuery(sqlText);
 			
 			while (rs.next()) {
-				scen = new Scenario();
-				scen.setDescription(rs.getString(3));
-				scenarios.add(scen);
-				
+				scenarios.add(extractScenario(rs));	
 			}
 			rs.close();
 
@@ -80,4 +74,10 @@ public class EAPScenariosDAO extends EAPParentDAO {
 		return scenarios;
 	}
 
+	private Scenario extractScenario(ResultSet rs) throws SQLException {
+		Scenario scen = new Scenario();
+		scen.setName(rs.getString(2));
+		scen.setDescription(rs.getString(3));
+		return scen;
+	}
 }

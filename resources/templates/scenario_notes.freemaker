@@ -1,0 +1,10 @@
+
+{# Basic scenario demo template #}
+
+<#list scenarios as scen>
+
+Scenario: ${ scen.name }
+	${ scen.description }
+
+</#list>	
+	

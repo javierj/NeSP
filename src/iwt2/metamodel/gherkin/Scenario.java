@@ -9,6 +9,7 @@ import java.util.*;
  */
 public class Scenario {
 
+	String name;
 	private String description;
 	
 	List<Step> givens;
@@ -20,6 +21,7 @@ public class Scenario {
 		this.whens = new ArrayList<>();
 		this.thens = new ArrayList<>();
 		this.setDescription("Undescribed");
+		this.setName("Unnamed");
 	}
 
 	public String getDescription() {
@@ -56,6 +58,14 @@ public class Scenario {
 	
 	public List<Step> thens() {
 		return Collections.unmodifiableList(this.thens);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }//end Scenario
