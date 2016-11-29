@@ -5,4 +5,4 @@
  * @author Javier
  *
  */
-package concretesyntax;
+package iwt2.concretesyntax.freemaker;

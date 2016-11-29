@@ -20,6 +20,7 @@ import iwt2.metamodel.gherkin.Feature;
 import iwt2.metamodel.gherkin.Given;
 import iwt2.metamodel.gherkin.Scenario;
 import iwt2.concretesyntax.eap.EAPScenariosDAO;
+import iwt2.concretesyntax.freemaker.FMTemplate;
 import mdetest.concretesyntax.eap.EAPConnectionFacade;
 import mdetest.concretesyntax.eap.EAPFunctionalRequirementDAO;
 import mdetest.concretesyntax.eap.EAPPackageDAO;
@@ -28,16 +29,17 @@ import mdetest.metamodels.functionalrequirement.Subsystem;
 
 public class SaveToText {
 
-	
-	public void saveToText(String eapFile, String packageName) {
-		EAPConnectionFacade.Connect(eapFile);
+	List<FunctionalRequirement> readScenarios(String packageName) {
 		EAPFunctionalRequirementDAO frDAO = EAPConnectionFacade.getEAPFunctionalRequirementDAO();
-		EAPScenariosDAO scenariosDAO = new EAPScenariosDAO(EAPConnectionFacade.Connection());
-		
-		
-		String pbId = this.idFor(packageName);
+		String pbId = EAPConnectionFacade.getEAPPackageDAO().idFor(packageName);
 		List<FunctionalRequirement> frs =  frDAO.getAllFunctionalRequirementsIn(null, pbId);
 		
+		return frs;
+	}
+	
+	
+	List<Feature> readFeaturesWithScenarios(List<FunctionalRequirement> frs) {
+		EAPScenariosDAO scenariosDAO = new EAPScenariosDAO(EAPConnectionFacade.Connection());
 		
 		List<Feature> features = new ArrayList<>();
 		Feature feature;
@@ -49,59 +51,26 @@ public class SaveToText {
 			
 			//System.out.println(fr.getName() + ": " + fr.getInternalId());
 			feature.setScenarios(scenariosDAO.getScenariosFor(fr));
-
-		}
-
-		// Volcarlos a una plantilla.
-		
-
-        /* Create and adjust the configuration singleton */
-        Configuration cfg = new Configuration(Configuration.VERSION_2_3_25);
-        try {
-			cfg.setDirectoryForTemplateLoading(new File("./resources/templates"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        cfg.setDefaultEncoding("UTF-8");
-        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        cfg.setLogTemplateExceptions(false);
-
-        /* ------------------------------------------------------------------------ */
-        /* You usually do these for MULTIPLE TIMES in the application life-cycle:   */
-
-        
-        Template temp = null;
-		try {
-			temp = cfg.getTemplate("scenario_notes.freemaker");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
-        /* Create a data-model */
-
+		return features;
+	}
+	
+	public void saveToText(String eapFile, String packageName) {
+		EAPConnectionFacade.Connect(eapFile);
+		
+		List<FunctionalRequirement> frs = this.readScenarios(packageName);
+		List<Feature> features = this.readFeaturesWithScenarios(frs);
+		
+		
+		FMTemplate template = new FMTemplate();
+		template.setTemplateFile("scenario_notes.freemaker");
         for(Feature feat: features) {
         	Map<String, Object> root = new HashMap<>();
 	        root.put("scenarios", feat.scenarios());
 	        
-        	
-	        Writer out = new OutputStreamWriter(System.out);
-	        try {
-				temp.process(root, out);
-			} catch (TemplateException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        	template.processToConsole(root);
         }
-	}
-	
-	//-----------------------------------------------
-	
-	private String idFor(String packageName) {
-		EAPPackageDAO packages = EAPConnectionFacade.getEAPPackageDAO();
-		Subsystem sub = packages.getPackage(packageName);	
-		return packages.getIdOfSubsystem(sub);
 	}
 	
 	

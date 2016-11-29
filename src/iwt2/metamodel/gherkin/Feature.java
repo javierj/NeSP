@@ -59,8 +59,6 @@ public class Feature {
 		this.scenarios = scenarios;
 	}
 
-	
-
 	public String getDescription() {
 		return description;
 	}
