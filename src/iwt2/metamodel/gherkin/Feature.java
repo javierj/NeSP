@@ -11,6 +11,7 @@ import mdetest.metamodels.functionalrequirement.FunctionalRequirement;
  */
 public class Feature {
 
+	private String name;
 	private String description;
 	private String i_want;
 	private String in_order_to;
@@ -73,6 +74,14 @@ public class Feature {
 
 	public void setFunctionalRequirement(FunctionalRequirement fr) {
 		this.fr = fr;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	

@@ -5,4 +5,4 @@
  * @author Javier
  *
  */
-package iwt2.output;
+package iwt2.transformations;

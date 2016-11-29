@@ -1,33 +1,26 @@
-package iwt2.output;
+package iwt2.transformations;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import freemarker.core.ParseException;
-import freemarker.template.Configuration;
-import freemarker.template.MalformedTemplateNameException;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
-import freemarker.template.TemplateNotFoundException;
+
 import iwt2.metamodel.gherkin.Feature;
-import iwt2.metamodel.gherkin.Given;
-import iwt2.metamodel.gherkin.Scenario;
 import iwt2.concretesyntax.eap.EAPScenariosDAO;
 import iwt2.concretesyntax.freemaker.FMTemplate;
 import mdetest.concretesyntax.eap.EAPConnectionFacade;
 import mdetest.concretesyntax.eap.EAPFunctionalRequirementDAO;
-import mdetest.concretesyntax.eap.EAPPackageDAO;
 import mdetest.metamodels.functionalrequirement.FunctionalRequirement;
-import mdetest.metamodels.functionalrequirement.Subsystem;
 
-public class SaveToText {
+
+/**
+ * Extrat use cases and the attached gherkin scenarios and store them into a file
+ * @author Javier
+ *
+ */
+public class GherkinScenariosToText {
 
 	List<FunctionalRequirement> readScenarios(String packageName) {
 		EAPFunctionalRequirementDAO frDAO = EAPConnectionFacade.getEAPFunctionalRequirementDAO();
@@ -43,10 +36,10 @@ public class SaveToText {
 		
 		List<Feature> features = new ArrayList<>();
 		Feature feature;
+		FunctionalRequirementToFeature FR_2_F = new FunctionalRequirementToFeature();
 		
 		for (FunctionalRequirement fr: frs) {
-			feature = new Feature();
-			feature.setFunctionalRequirement(fr);
+			feature = FR_2_F.transform(fr);
 			features.add(feature);
 			
 			//System.out.println(fr.getName() + ": " + fr.getInternalId());
@@ -77,7 +70,7 @@ public class SaveToText {
 	//------------------------------------------
 	
 	public static void main(String[] args) {
-		SaveToText stot = new SaveToText();
+		GherkinScenariosToText stot = new GherkinScenariosToText();
 		stot.saveToText("./test/resources/ForTesting 01.EAP", "UC - Tournament system");
 	}
 }
