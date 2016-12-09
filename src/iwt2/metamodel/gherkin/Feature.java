@@ -83,6 +83,7 @@ public class Feature {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	
 	
 }//end Feature

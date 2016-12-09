@@ -43,8 +43,8 @@ public class GherkinScenariosToText {
 			features.add(feature);
 			
 			// Añadir los unos a los otros y leer el Background por separado
-			feature.setScenarios(scenariosDAO.getScenariosLinkedTo(fr));
-			feature.setScenarios(scenariosDAO.getScenariosSonsOf(fr));
+			feature.setContext(scenariosDAO.getBackgroundFrom(fr));
+			feature.setScenarios(scenariosDAO.getScenariosFrom(fr));
 		}
 		
 		return features;

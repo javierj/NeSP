@@ -21,6 +21,13 @@ public class Background {
 
 	}
 	
+	public static Background createFromScenario(Scenario scen) {
+		Background b = new Background();
+		b.description = scen.getDescription();
+		b.givens.addAll(scen.givens());
+		return b;
+	}
+	
 	public String getDescription() {
 		return description;
 	}

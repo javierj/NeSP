@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import iwt2.metamodel.gherkin.Background;
 import iwt2.metamodel.gherkin.Scenario;
 import mdetest.concretesyntax.eap.EAPConnection;
 import mdetest.concretesyntax.eap.EAPException;
@@ -18,6 +19,32 @@ public class EAPScenariosDAO extends EAPParentDAO {
 	}
 	
 	
+	public List<Scenario> getScenariosFrom(FunctionalRequirement fr) {
+		List<Scenario> scenarios = new ArrayList<>();
+		scenarios.addAll(this.getScenariosLinkedTo(fr, "scenario"));
+		scenarios.addAll(this.getScenariosSonsOf(fr, "scenario"));
+		return scenarios;
+	}
+	
+	
+	public Background getBackgroundFrom(FunctionalRequirement fr) {
+		List<Scenario> scenarios = this.getScenariosLinkedTo(fr, "background");
+		if (scenarios.size() > 1) {
+			System.err.println("Error, more than one scenario");
+		}
+		if (scenarios.size() == 0) {
+			scenarios = this.getScenariosSonsOf(fr, "background");
+			if (scenarios.size() > 1) {
+				System.err.println("Error, more than one scenario");
+			}
+		}
+		if (scenarios.size() == 0) {
+			return null;
+		}
+		
+		return Background.createFromScenario(scenarios.get(0));
+	}
+	
 	/**
 	 * This method reads all objectes stererotiped as "scenearios" associated to 
 	 * a functional requirement using an assocacition cnnection.
@@ -25,7 +52,7 @@ public class EAPScenariosDAO extends EAPParentDAO {
 	 * @param fr
 	 * @return
 	 */
-	public List<Scenario> getScenariosLinkedTo(FunctionalRequirement fr) {
+	private List<Scenario> getScenariosLinkedTo(FunctionalRequirement fr, String stereotype) {
 		List<Scenario> scenarios = new ArrayList<>();
 		
 		if (fr.getInternalId() == null) {
@@ -36,7 +63,7 @@ public class EAPScenariosDAO extends EAPParentDAO {
 				+ "FROM t_object, t_connector "
 				+ "WHERE t_connector.[Start_Object_ID]=" + fr.getInternalId()
 				+ " AND t_connector.[End_Object_ID]=t_object.[Object_ID]"
-				+ " AND t_object.[Stereotype]='scenario'"
+				+ " AND t_object.[Stereotype]='" + stereotype +"'"
 				+ ";";
 
 		try {
@@ -59,7 +86,7 @@ public class EAPScenariosDAO extends EAPParentDAO {
 				+ "FROM t_object, t_connector "
 				+ "WHERE t_connector.[End_Object_ID]=" + fr.getInternalId()
 				+ " AND t_connector.[Start_Object_ID]=t_object.[Object_ID]"
-				+ " AND t_object.[Stereotype]='scenario'"
+				+ " AND t_object.[Stereotype]='" + stereotype +"'"
 				+ ";";
 
 		try {
@@ -87,7 +114,7 @@ public class EAPScenariosDAO extends EAPParentDAO {
 	 * @param fr
 	 * @return
 	 */
-	public List<Scenario> getScenariosSonsOf(FunctionalRequirement fr) {
+	private List<Scenario> getScenariosSonsOf(FunctionalRequirement fr, String stereotype) {
 		List<Scenario> scenarios = new ArrayList<>();
 		String diagramID = null;
 		
@@ -119,7 +146,7 @@ public class EAPScenariosDAO extends EAPParentDAO {
 
 
 		if (diagramID == null) {
-			System.err.println("EAPScenariosDAO::getScenariosSonsOf -- No internal diagram.");
+			//System.err.println("EAPScenariosDAO::getScenariosSonsOf -- No internal diagram.");
 			return scenarios;
 		}
 
@@ -129,6 +156,7 @@ public class EAPScenariosDAO extends EAPParentDAO {
 +"WHERE t_object.[Object_ID] = t_diagramobjects.[Object_ID] "
 + "AND t_diagramobjects.[Diagram_ID] = "+diagramID
 +" AND t_object.[Object_Type] = 'UseCase'"
++ " AND t_object.[Stereotype]='" + stereotype +"'"
 
 				+ ";";
 
@@ -159,4 +187,7 @@ public class EAPScenariosDAO extends EAPParentDAO {
 		scen.setDescription(rs.getString("Note"));
 		return scen;
 	}
+
+
+	
 }
