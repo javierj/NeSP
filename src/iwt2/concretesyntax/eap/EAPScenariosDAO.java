@@ -8,7 +8,6 @@ import java.util.List;
 import iwt2.metamodel.gherkin.Scenario;
 import mdetest.concretesyntax.eap.EAPConnection;
 import mdetest.concretesyntax.eap.EAPException;
-import mdetest.concretesyntax.eap.EAPPackageDAO;
 import mdetest.concretesyntax.eap.EAPParentDAO;
 import mdetest.metamodels.functionalrequirement.FunctionalRequirement;
 
@@ -19,7 +18,14 @@ public class EAPScenariosDAO extends EAPParentDAO {
 	}
 	
 	
-	public List<Scenario> getScenariosFor(FunctionalRequirement fr) {
+	/**
+	 * This method reads all objectes stererotiped as "scenearios" associated to 
+	 * a functional requirement using an assocacition cnnection.
+	 * No stsreotype is checked for the association.
+	 * @param fr
+	 * @return
+	 */
+	public List<Scenario> getScenariosLinkedTo(FunctionalRequirement fr) {
 		List<Scenario> scenarios = new ArrayList<>();
 		
 		if (fr.getInternalId() == null) {
@@ -74,10 +80,83 @@ public class EAPScenariosDAO extends EAPParentDAO {
 		return scenarios;
 	}
 
+
+	/**
+	 * This method serach for use cases stereotypes as 'scenarios' that are defined in a 
+	 * use case diagram defined into de functional requirement fr
+	 * @param fr
+	 * @return
+	 */
+	public List<Scenario> getScenariosSonsOf(FunctionalRequirement fr) {
+		List<Scenario> scenarios = new ArrayList<>();
+		String diagramID = null;
+		
+		if (fr.getInternalId() == null) {
+			System.err.println("EAPScenariosDAO::getScenariosSonsOf -- No internal id setted.");
+		}
+
+		// Refactorizar. Esta cosulta da el ID de un diagrama interno.
+		String sqlText = "SELECT t_diagram.[Diagram_ID]"
++ " FROM `t_diagram`"
++ " WHERE t_diagram.[ParentID] = " + fr.getInternalId()
++ " AND t_diagram.[Diagram_Type] = 'Use Case'"
+				+ ";";
+
+		try {
+			ResultSet rs = c.executeQuery(sqlText);
+			while (rs.next()) {
+				diagramID = rs.getString(1);	
+				
+			}
+			rs.close();
+
+		} catch (SQLException ex) {
+
+			System.out.println("Consulta SQL:\n" + sqlText);
+			throw new EAPException(
+					"Error recuperando información de las precondiciones");
+		}
+
+
+		if (diagramID == null) {
+			System.err.println("EAPScenariosDAO::getScenariosSonsOf -- No internal diagram.");
+			return scenarios;
+		}
+
+		
+		sqlText = "SELECT * "
++"FROM t_object, `t_diagramobjects` "
++"WHERE t_object.[Object_ID] = t_diagramobjects.[Object_ID] "
++ "AND t_diagramobjects.[Diagram_ID] = "+diagramID
++" AND t_object.[Object_Type] = 'UseCase'"
+
+				+ ";";
+
+		try {
+			ResultSet rs = c.executeQuery(sqlText);
+			
+			while (rs.next()) {
+				scenarios.add(extractScenario(rs));	
+			}
+			rs.close();
+
+		} catch (SQLException ex) {
+
+			System.out.println("Consulta SQL:\n" + sqlText);
+			throw new EAPException(
+					"Error recuperando información de las precondiciones");
+		}
+		
+		return scenarios;
+	}
+
+	
+	
+	
 	private Scenario extractScenario(ResultSet rs) throws SQLException {
 		Scenario scen = new Scenario();
-		scen.setName(rs.getString(2));
-		scen.setDescription(rs.getString(3));
+		scen.setName(rs.getString("Name"));
+		scen.setDescription(rs.getString("Note"));
 		return scen;
 	}
 }

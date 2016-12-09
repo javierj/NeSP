@@ -40,18 +40,24 @@ public class FMTemplate {
 	}
 	
 	
+	/**
+	 * Call this method before any call to process
+	 * @param string
+	 */
 	public void setTemplateFile(String string) {
-		
 		try {
 			temp = cfg.getTemplate(string);
 		} catch (Exception e) {
 			throw new java.lang.RuntimeException(e);
 		}
-		
-		
 	}
 
-	public void process(Map<String, Object> root, Writer out) {		
+	/**
+	 * It i better o use any specific processToX.
+	 * @param root
+	 * @param out
+	 */
+	void process(Map<String, Object> root, Writer out) {		
 		try {
 			temp.process(root, out);
 		} catch (TemplateException | IOException e) {

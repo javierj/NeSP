@@ -22,7 +22,7 @@ import mdetest.metamodels.functionalrequirement.FunctionalRequirement;
  */
 public class GherkinScenariosToText {
 
-	List<FunctionalRequirement> readScenarios(String packageName) {
+	List<FunctionalRequirement> readFunctionalRequirements(String packageName) {
 		EAPFunctionalRequirementDAO frDAO = EAPConnectionFacade.getEAPFunctionalRequirementDAO();
 		String pbId = EAPConnectionFacade.getEAPPackageDAO().idFor(packageName);
 		List<FunctionalRequirement> frs =  frDAO.getAllFunctionalRequirementsIn(null, pbId);
@@ -42,17 +42,20 @@ public class GherkinScenariosToText {
 			feature = FR_2_F.transform(fr);
 			features.add(feature);
 			
-			//System.out.println(fr.getName() + ": " + fr.getInternalId());
-			feature.setScenarios(scenariosDAO.getScenariosFor(fr));
+			// Añadir los unos a los otros y leer el Background por separado
+			feature.setScenarios(scenariosDAO.getScenariosLinkedTo(fr));
+			feature.setScenarios(scenariosDAO.getScenariosSonsOf(fr));
 		}
 		
 		return features;
 	}
 	
+	
+	
 	public void saveToText(String eapFile, String packageName) {
 		EAPConnectionFacade.Connect(eapFile);
 		
-		List<FunctionalRequirement> frs = this.readScenarios(packageName);
+		List<FunctionalRequirement> frs = this.readFunctionalRequirements(packageName);
 		List<Feature> features = this.readFeaturesWithScenarios(frs);
 		
 		
@@ -71,6 +74,6 @@ public class GherkinScenariosToText {
 	
 	public static void main(String[] args) {
 		GherkinScenariosToText stot = new GherkinScenariosToText();
-		stot.saveToText("./test/resources/ForTesting 01.EAP", "UC - Tournament system");
+		stot.saveToText("./test/resources/Scenarios 03.EAP", "UC - Tournament system");
 	}
 }
