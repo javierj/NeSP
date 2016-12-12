@@ -32,6 +32,8 @@ public class Scenario {
 	 * @return
 	 */
 	public String getDescription() {
+		if (this.description == null)
+			return null;
 		String s = "";
 		String space = "    ";
 		String[] lines = this.description.split("\n");

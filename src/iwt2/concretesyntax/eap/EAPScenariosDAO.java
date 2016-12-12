@@ -180,7 +180,6 @@ public class EAPScenariosDAO extends EAPParentDAO {
 
 	
 	
-	
 	private Scenario extractScenario(ResultSet rs) throws SQLException {
 		Scenario scen = new Scenario();
 		scen.setName(rs.getString("Name"));
@@ -188,6 +187,4 @@ public class EAPScenariosDAO extends EAPParentDAO {
 		return scen;
 	}
 
-
-	
 }

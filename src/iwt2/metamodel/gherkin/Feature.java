@@ -61,7 +61,16 @@ public class Feature {
 	}
 
 	public String getDescription() {
-		return description;
+		if (this.description == null) {
+			return null;
+		}
+		String s = "";
+		String space = "    ";
+		String[] lines = this.description.split("\n");
+		for(String line: lines) {
+			s += space + line + "\n";
+		}
+		return s;
 	}
 
 	public void setDescription(String description) {
