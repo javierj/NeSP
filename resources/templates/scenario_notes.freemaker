@@ -1,8 +1,14 @@
 
 {# Basic scenario demo template #}
 
-<#list scenarios as scen>
+<#if background??>
+$Background: { background.description }
+<#list background.givens as step>
+	${step}
+</#list>
+</#if>
 
+<#list scenarios as scen>
 Scenario: ${ scen.name }
 	${ scen.description }
 

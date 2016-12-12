@@ -9,7 +9,8 @@ import java.util.Map;
 
 import iwt2.metamodel.gherkin.Feature;
 import iwt2.concretesyntax.eap.EAPScenariosDAO;
-import iwt2.concretesyntax.freemaker.FMTemplate;
+import iwt2.concretesyntax.template.FMTemplate;
+import iwt2.concretesyntax.template.VelocityTemplate;
 import mdetest.concretesyntax.eap.EAPConnectionFacade;
 import mdetest.concretesyntax.eap.EAPFunctionalRequirementDAO;
 import mdetest.metamodels.functionalrequirement.FunctionalRequirement;
@@ -58,15 +59,27 @@ public class GherkinScenariosToText {
 		List<FunctionalRequirement> frs = this.readFunctionalRequirements(packageName);
 		List<Feature> features = this.readFeaturesWithScenarios(frs);
 		
-		
+		/*
 		FMTemplate template = new FMTemplate();
 		template.setTemplateFile("scenario_notes.freemaker");
         for(Feature feat: features) {
         	Map<String, Object> root = new HashMap<>();
-	        root.put("scenarios", feat.scenarios());
+        	root.put("background", feat.getContext());
+        	root.put("scenarios", feat.scenarios());
 	        
         	template.processToConsole(root);
         }
+        */
+		VelocityTemplate template = new VelocityTemplate("scenarios.velocity");
+        for(Feature feat: features) {
+        	
+        	template.putInContext("background", feat.getContext());
+        	template.putInContext("scenarios", feat.scenarios());
+	        
+        	System.out.println(template.processToString());
+        }
+		
+		
 	}
 	
 	

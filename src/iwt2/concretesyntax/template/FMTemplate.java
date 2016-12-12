@@ -1,4 +1,4 @@
-package iwt2.concretesyntax.freemaker;
+package iwt2.concretesyntax.template;
 
 import java.io.File;
 import java.io.IOException;

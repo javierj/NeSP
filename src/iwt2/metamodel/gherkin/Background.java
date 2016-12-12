@@ -17,6 +17,7 @@ public class Background {
 	public List<Step> givens;
 
 	public Background(){
+		this.description = "Unset";
 		givens = new ArrayList<>();
 
 	}
