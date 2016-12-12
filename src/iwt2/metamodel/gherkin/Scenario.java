@@ -3,6 +3,9 @@ package iwt2.metamodel.gherkin;
 import java.util.*;
 
 /**
+ * 
+ * Actually all steps are stored in th description.
+ * 
  * @author Javier
  * @version 1.0
  * @created 17-nov.-2016 9:09:03
@@ -24,8 +27,18 @@ public class Scenario {
 		this.setName("Unnamed");
 	}
 
+	/**
+	 * Atually all the steps are stored in the description so we tabulate them
+	 * @return
+	 */
 	public String getDescription() {
-		return description;
+		String s = "";
+		String space = "    ";
+		String[] lines = this.description.split("\n");
+		for(String line: lines) {
+			s += space + line + "\n";
+		}
+		return s;
 	}
 
 	public void setDescription(String description) {

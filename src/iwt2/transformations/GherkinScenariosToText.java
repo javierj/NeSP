@@ -1,15 +1,10 @@
 package iwt2.transformations;
 
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 
 import iwt2.metamodel.gherkin.Feature;
 import iwt2.concretesyntax.eap.EAPScenariosDAO;
-import iwt2.concretesyntax.template.FMTemplate;
 import iwt2.concretesyntax.template.VelocityTemplate;
 import mdetest.concretesyntax.eap.EAPConnectionFacade;
 import mdetest.concretesyntax.eap.EAPFunctionalRequirementDAO;
@@ -26,7 +21,7 @@ public class GherkinScenariosToText {
 	List<FunctionalRequirement> readFunctionalRequirements(String packageName) {
 		EAPFunctionalRequirementDAO frDAO = EAPConnectionFacade.getEAPFunctionalRequirementDAO();
 		String pbId = EAPConnectionFacade.getEAPPackageDAO().idFor(packageName);
-		List<FunctionalRequirement> frs =  frDAO.getAllFunctionalRequirementsIn(null, pbId);
+		List<FunctionalRequirement> frs =  frDAO.getAllFunctionalRequirementsInStsreotypedWithFR(null, pbId);
 		
 		return frs;
 	}
@@ -70,16 +65,21 @@ public class GherkinScenariosToText {
         	template.processToConsole(root);
         }
         */
+		/*
 		VelocityTemplate template = new VelocityTemplate("scenarios.velocity");
-        for(Feature feat: features) {
+        
+		for(Feature feat: features) {
         	
         	template.putInContext("background", feat.getContext());
         	template.putInContext("scenarios", feat.scenarios());
 	        
         	System.out.println(template.processToString());
         }
+		*/
 		
-		
+		VelocityTemplate template = new VelocityTemplate("features.velocity");
+		template.putInContext("features", features);
+		System.out.println(template.processToString());
 	}
 	
 	

@@ -9,6 +9,7 @@ public class FunctionalRequirementToFeature {
 		Feature feature = new Feature();
 		feature.setFunctionalRequirement(fr);
 		feature.setName(fr.getName());
+		feature.setDescription(fr.getDescription());
 		
 		return feature;
 	}

@@ -1,0 +1,24 @@
+
+## Gherkin full template
+
+#foreach( $feat in $features)
+
+Feature $feat.name
+$feat.description
+
+#if( $feat.context)
+Background: 
+$feat.context.getDescription() 
+#foreach( $step in $feat.context.givens() )
+	$step
+#end
+#end
+
+#foreach( $scen in $feat.scenarios() )
+Scenario: $scen.name
+$scen.description
+	
+#end
+
+#end
+	

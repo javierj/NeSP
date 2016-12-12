@@ -1,10 +1,11 @@
 
-## Basic scenario demo template #}
+## Basic scenario demo template
 
-
+#if( $background )
 Background: $background.getDescription() 
 #foreach( $step in $background.givens() )
 	$step
+#end
 #end
 
 #foreach( $scen in $scenarios )

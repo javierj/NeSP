@@ -34,10 +34,32 @@ public class TestVelocityTemplate {
 		StringWriter w = new StringWriter();
 		t.merge( context, w );
 
-		System.out.println(w.toString());
+		//System.out.println(w.toString());
         assertTrue(w.toString().contains("Background"));
         assertTrue(w.toString().contains("GIVEN"));
 	}
+
+	
+	
+	@Test
+	public void dontShowBackgroundExpresionWhenThereIsNoBackground() {
+		Scenario scen = createScenario();
+
+		VelocityContext context = new VelocityContext();
+		context.put("scenarios", Arrays.asList(scen));		
+		
+		VelocityEngine ve = new VelocityEngine();
+		ve.init();
+
+		Template t = ve.getTemplate("./resources/templates/scenarios.velocity");
+		StringWriter w = new StringWriter();
+		t.merge( context, w );
+
+		System.out.println(w.toString());
+        assertFalse(w.toString().contains("$background.getDescription()"));
+        
+	}
+
 	
 	private Scenario createScenario() {
 		Scenario scen = new Scenario();
