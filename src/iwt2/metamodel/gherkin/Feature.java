@@ -76,6 +76,10 @@ public class Feature {
 	}
 
 	public void setDescription(String description) {
+		if (description == null) {
+			this.description = "Unset";
+			return;
+		}
 		this.description = description.trim();
 	}
 

@@ -6,6 +6,7 @@ import java.util.List;
 import gherkin.ast.ScenarioDefinition;
 import iwt2.metamodel.gherkin.Feature;
 import iwt2.metamodel.gherkin.Scenario;
+import iwt2.metamodel.gherkin.Step;
 
 /**
  * This transformation creates a model from the gherkin metamodel from the AST if a cherking
@@ -37,7 +38,17 @@ public class GherkinParserToFeature {
 
 	private Scenario gherkinScenario_to_Scenario(ScenarioDefinition scenario) {
 		Scenario scen = new Scenario();
+		Step step;
+		for (gherkin.ast.Step gerkhinStep: scenario.getSteps()) {
+			step = gherkinStep_to_Step(gerkhinStep);
+			scen.addStep(step);
+		}
+		
 		return scen;
+	}
+
+	private Step gherkinStep_to_Step(gherkin.ast.Step gerkhinStep) {
+		return Step.createStep(gerkhinStep.getKeyword()+" " + gerkhinStep.getText() );
 	}
 
 	private Feature gherkinFeature_to_Feature(gherkin.ast.Feature gherkin_feature) {

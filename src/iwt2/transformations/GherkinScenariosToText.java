@@ -81,9 +81,11 @@ public class GherkinScenariosToText {
 		
 		
 	void saveToFile(List<Feature> features) {
-		VelocityTemplate template = new VelocityTemplate("features.velocity");
-		template.putInContext("features", features);
-		System.out.println(template.processToString());
+		for (Feature feat: features) {
+			VelocityTemplate template = new VelocityTemplate("feature.velocity");
+			template.putInContext("feat", feat);
+			System.out.println(template.processToString()); // Save to file
+		}
 	}
 	
 	

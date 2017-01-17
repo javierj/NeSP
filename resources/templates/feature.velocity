@@ -1,6 +1,8 @@
-## Gherkin full template
 
-#foreach( $feat in $features)
+
+
+## Template for one feature only
+
 
 Feature $feat.name
 #if( $feat.description)
@@ -21,4 +23,4 @@ $scen.description
 	
 #end
 
-#end
+	

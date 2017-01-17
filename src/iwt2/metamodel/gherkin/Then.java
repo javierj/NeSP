@@ -13,6 +13,10 @@ public class Then extends Step {
 		super();
 	}
 
+	public Then(String substring) {
+		this.setAction(substring);
+	}
+
 	@Override
 	public boolean isType(int type) {
 		return type == Then.THEN_TYPE;

@@ -13,6 +13,10 @@ public class When extends Step {
 		super();
 	}
 
+	public When(String substring) {
+		this.setAction(substring);
+	}
+
 	@Override
 	public boolean isType(int type) {
 		return type == When.WHEN_TYPE;

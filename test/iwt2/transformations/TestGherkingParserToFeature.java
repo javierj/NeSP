@@ -74,6 +74,25 @@ public class TestGherkingParserToFeature {
 		assertEquals(1, my_feat.scenarios().size());
 	}
 	
+
+	@Test
+	public void scenarioDefinitionToSteps() {
+		Feature my_feat = transform();
+		Scenario scen = my_feat.scenarios().get(0);
+		
+		assertEquals(1, scen.givens().size());
+		assertEquals("Signing up a new user", scen.givens().get(0).getAction());
+
+		assertEquals(1, scen.whens().size());
+		assertEquals("Newt introduces Abs#123 as battletag", scen.whens().get(0).getAction());
+		
+		assertEquals(1, scen.thens().size());
+		assertEquals("System abort fue the battletag lack one figure", scen.thens().get(0).getAction());
+
+	}
+
+	
+	
 	
 	private Feature transform() {
 		GherkinParserToFeature transform = new GherkinParserToFeature();

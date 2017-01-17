@@ -21,7 +21,7 @@ public abstract class Step {
 	}
 
 	public void setAction(String action) {
-		this.action = action;
+		this.action = action.trim();
 	}
 	
 	
@@ -38,5 +38,25 @@ public abstract class Step {
 	 * @return
 	 */
 	public abstract boolean isType(int type);
+	
+	/**
+	 * Factory method to create steps from strings
+	 * @param step
+	 * @return
+	 */
+	public static Step createStep(String stepText) {
+		String lower = stepText.toLowerCase();
+		
+		if (lower.startsWith("given")) {
+			return new Given(stepText.substring(6));
+		}
+		if (lower.startsWith("when")) {
+			return new When(stepText.substring(5));
+		}
+		if (lower.startsWith("then")) {
+			return new Then(stepText.substring(5));
+		}
+		throw new java.lang.RuntimeException("Invalid step type: " + stepText);
+	}
 
 }//end Step
