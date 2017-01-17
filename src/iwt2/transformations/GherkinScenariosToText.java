@@ -48,7 +48,7 @@ public class GherkinScenariosToText {
 	
 	
 	
-	public void saveToText(String eapFile, String packageName) {
+	public void transform(String eapFile, String packageName) {
 		EAPConnectionFacade.Connect(eapFile);
 		
 		List<FunctionalRequirement> frs = this.readFunctionalRequirements(packageName);
@@ -76,7 +76,11 @@ public class GherkinScenariosToText {
         	System.out.println(template.processToString());
         }
 		*/
+		saveToFile(features);
+	}
 		
+		
+	void saveToFile(List<Feature> features) {
 		VelocityTemplate template = new VelocityTemplate("features.velocity");
 		template.putInContext("features", features);
 		System.out.println(template.processToString());
@@ -87,6 +91,6 @@ public class GherkinScenariosToText {
 	
 	public static void main(String[] args) {
 		GherkinScenariosToText stot = new GherkinScenariosToText();
-		stot.saveToText("./test/resources/Scenarios 03.EAP", "UC - Tournament system");
+		stot.transform("./test/resources/Scenarios 03.EAP", "UC - Tournament system");
 	}
 }

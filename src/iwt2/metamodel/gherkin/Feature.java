@@ -33,7 +33,7 @@ public class Feature {
 	}
 
 	public void setIWant(String i_want) {
-		this.i_want = i_want;
+		this.i_want = i_want.trim();
 	}
 
 	public String getInOrderTo() {
@@ -41,7 +41,7 @@ public class Feature {
 	}
 
 	public void setInOrderTo(String in_order_to) {
-		this.in_order_to = in_order_to;
+		this.in_order_to = in_order_to.trim();
 	}
 
 	public Background getContext() {
@@ -64,17 +64,19 @@ public class Feature {
 		if (this.description == null) {
 			return null;
 		}
+		return this.description;
+		/* - Esto no debe estar aquí
 		String s = "";
 		String space = "    ";
 		String[] lines = this.description.split("\n");
 		for(String line: lines) {
 			s += space + line + "\n";
 		}
-		return s;
+		return s;*/
 	}
 
 	public void setDescription(String description) {
-		this.description = description;
+		this.description = description.trim();
 	}
 
 	public FunctionalRequirement getFunctionalRequirement() {
@@ -91,6 +93,11 @@ public class Feature {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void addScenario(Scenario my_scenario) {
+		scenarios.add(my_scenario); 
+		
 	}
 
 	
