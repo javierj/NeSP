@@ -1,9 +1,12 @@
 package iwt2.transformations;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import iwt2.metamodel.gherkin.Feature;
+import iwt2.util.NeSPConfiguration;
 import iwt2.concretesyntax.eap.EAPScenariosDAO;
 import iwt2.concretesyntax.template.VelocityTemplate;
 import mdetest.concretesyntax.eap.EAPConnectionFacade;
@@ -17,6 +20,12 @@ import mdetest.metamodels.functionalrequirement.FunctionalRequirement;
  *
  */
 public class GherkinScenariosToText {
+	
+	NeSPConfiguration config;
+	
+	public GherkinScenariosToText(NeSPConfiguration config) {
+		this.config = config;
+	}
 
 	List<FunctionalRequirement> readFunctionalRequirements(String packageName) {
 		EAPFunctionalRequirementDAO frDAO = EAPConnectionFacade.getEAPFunctionalRequirementDAO();
@@ -76,15 +85,26 @@ public class GherkinScenariosToText {
         	System.out.println(template.processToString());
         }
 		*/
-		saveToFile(features);
+		renderTemplate(features);
 	}
 		
 		
-	void saveToFile(List<Feature> features) {
+	void saveToFile(String fileName, String body) {
+		try(  PrintWriter out = new PrintWriter( this.config.featuresPath() + "/" +  fileName + ".feature" )  ){
+		    out.println( body);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	void renderTemplate(List<Feature> features) {
 		for (Feature feat: features) {
 			VelocityTemplate template = new VelocityTemplate("feature.velocity");
 			template.putInContext("feat", feat);
 			System.out.println(template.processToString()); // Save to file
+			saveToFile(feat.getName(), template.processToString());
 		}
 	}
 	
@@ -92,7 +112,11 @@ public class GherkinScenariosToText {
 	//------------------------------------------
 	
 	public static void main(String[] args) {
-		GherkinScenariosToText stot = new GherkinScenariosToText();
+		NeSPConfiguration config = new NeSPConfiguration();
+		
+		config.setFeaturesPath("./");
+		
+		GherkinScenariosToText stot = new GherkinScenariosToText(config);
 		stot.transform("./test/resources/Scenarios 03.EAP", "UC - Tournament system");
 	}
 }
