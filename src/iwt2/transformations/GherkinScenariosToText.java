@@ -15,7 +15,10 @@ import mdetest.metamodels.functionalrequirement.FunctionalRequirement;
 
 
 /**
- * Extrat use cases and the attached gherkin scenarios and store them into a file
+ * Extrat use cases and the attached gherkin scenarios and store them into a file.
+ * 
+ * Actually we ae not using the config object. Maybe the datoa of the EAP cul 
+ * come in the config object
  * @author Javier
  *
  */
@@ -57,7 +60,7 @@ public class GherkinScenariosToText {
 	
 	
 	
-	public void transform(String eapFile, String packageName) {
+	public List<Feature> transform(String eapFile, String packageName) {
 		EAPConnectionFacade.Connect(eapFile);
 		
 		List<FunctionalRequirement> frs = this.readFunctionalRequirements(packageName);
@@ -85,28 +88,11 @@ public class GherkinScenariosToText {
         	System.out.println(template.processToString());
         }
 		*/
-		renderTemplate(features);
+		//renderTemplate(features);
+		return features;
 	}
 		
 		
-	void saveToFile(String fileName, String body) {
-		try(  PrintWriter out = new PrintWriter( this.config.featuresPath() + "/" +  fileName + ".feature" )  ){
-		    out.println( body);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	
-	void renderTemplate(List<Feature> features) {
-		for (Feature feat: features) {
-			VelocityTemplate template = new VelocityTemplate("feature.velocity");
-			template.putInContext("feat", feat);
-			System.out.println(template.processToString()); // Save to file
-			saveToFile(feat.getName(), template.processToString());
-		}
-	}
 	
 	
 	//------------------------------------------

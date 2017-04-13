@@ -1,10 +1,7 @@
-
-
-
 ## Template for one feature only
 
 
-Feature $feat.name
+Feature: $feat.name
 #if( $feat.description)
 $feat.description
 #end

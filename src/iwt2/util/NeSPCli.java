@@ -1,6 +1,9 @@
 package iwt2.util;
 
+import java.util.List;
+
 import iwt2.cucumber.Launcher;
+import iwt2.metamodel.gherkin.Feature;
 import iwt2.transformations.GherkinScenariosToText;
 
 public class NeSPCli {
@@ -11,13 +14,15 @@ public class NeSPCli {
 		config.setFeaturesPath("./test/features_genetared");
 		
 		GherkinScenariosToText stot = new GherkinScenariosToText(config);
-		stot.transform("./test/resources/Scenarios 03.EAP", "UC - Tournament system");
+		List<Feature> features = stot.transform("./test/resources/Scenarios 03.EAP", "UC - Tournament system");
 		
-		System.out.println("-------------------------");
-		
+		System.out.println("Features: " + features.size());
+		new SaveFeatures(config).save(features);
 		new Launcher().launch(config);
 		
-		System.out.println("Ok");
+		
+		
+		System.out.println("never run");
 	}
 	
 }

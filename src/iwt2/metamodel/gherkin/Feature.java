@@ -104,6 +104,10 @@ public class Feature {
 		
 	}
 
+	public boolean hasNotScearios() {
+		return this.scenarios.isEmpty();
+	}
+
 	
 	
 }//end Feature

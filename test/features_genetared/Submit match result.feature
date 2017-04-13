@@ -1,9 +1,4 @@
-
-
-
-
-
-Feature Submit match result
+Feature: Submit match result
 As player named Kol
 I want to submit the result of matches
 In order to update my classification
@@ -34,7 +29,3 @@ Scenario: Final classification
     Then "Aka" is "first" with "5" wins and "1" lose
     And "Kol" is "second" with "3" wins and "3" loses
     And "Tis" is "third" with "1" wins and "5" loses
-
-	
-
-	

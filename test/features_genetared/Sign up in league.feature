@@ -1,9 +1,4 @@
-
-
-
-
-
-Feature Sign up in league
+Feature: Sign up in league
 As a new player named Newt
 I want to sign myself into the league
 In order to play matches and have a classification
@@ -27,7 +22,3 @@ Scenario: Bad battletag id
     Given Signing up a new user
     When "Newt" introduces "Abs#123" as battletag 
     Then System abort due the battletag lack one figure
-
-	
-
-	
